@@ -1,4 +1,4 @@
-/* Declared globally. */	
++/* Declared globally. */
 
 function findProduct(id) {
   ...
