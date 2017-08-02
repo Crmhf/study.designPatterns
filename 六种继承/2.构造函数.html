@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>采用构造函数方式</title>
+</head>
+<body>
+
+    <script>
+        function Super(val){
+            this.val = val;
+            this.arr = [1];
+
+            this.fun = function(){
+                // ...
+            }
+        }
+        function Sub(val){
+            Super.call(this, val); // 核心
+            // ...
+        }
+
+        var sub1 = new Sub(1);
+        var sub2 = new Sub(2);
+        sub1.arr.push(2);
+        alert(sub1.val); // 1
+        alert(sub2.val); // 2
+
+        alert(sub1.arr); // 1,2
+        alert(sub2.arr); // 1
+
+        alert(sub1.fun === sub2.fun); // false
+    </script>
+
+</body>
+</html>
+
+<!--
+    核心：借父类的构造函数来增强子类实例，等于把父类的实例属性复制了一份给子类实例装上了
+    优缺点:
+        优点：
+            1.解决了子类实例共享父类引用属性的问题
+            2.创建子类实例时，可以向父类构造函数传参
+            P.S前辈就是这么高效，两个缺陷瞬间修复
+        缺点：
+            1.无法实现函数复用，每个子类实例都持有一个新的fun函数，太多了就会影响性能，内存爆炸
+-->

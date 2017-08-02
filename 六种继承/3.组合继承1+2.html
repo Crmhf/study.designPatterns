@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    function Super(){
+        // 只在此声明基本属性和引用属性
+        this.val = 1;
+        this.arr = [1];
+    }
+    // 在此处声明函数
+    Super.prototype.fun1 = function(){};
+    Super.prototype.fun2 = function(){};
+    // Super.prototype.fun3...
+    function Sub(){
+        Super.call(this); // 核心
+        // ...
+    }
+    Sub.prototype = new Super(); // 核心
+
+    var sub1 = new Sub(1);
+    var sub2 = new Sub(2);
+    alert(sub1.fun === sub2.fun); // true
+</script>
+
+</body>
+</html>
+<!--
+    核心：把实例函数都放在原型对象上，以实现函数复用。同时保留构造函数方式的优点，通过
+    Super.call(this);继承父类的基本属性和引用属性并保留可以传参的优点;
+    通过Sub.prototype = new Super();继承父类函数，实现函数复用
+
+    优缺点：
+        优点：
+            1.不存在引用属性共享问题
+            2.可传参
+            3.函数可复用
+        缺点：
+            1.（小瑕疵）子类原型上有一份多于的父类实例属性，因为父类构造函数被调用了两次，生成了两份，
+            而子类实例上的那一份屏蔽了子类原型上的。。。又是内存浪费，比刚才情况好点，不过确实是瑕疵
+            P.S
+-->

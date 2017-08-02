@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寄生式</title>
+</head>
+<body>
+
+<script>
+	function beget(obj){ // 生孩子函数 beget: 龙beget龙,风beget凤
+		var F = function(){};
+		F.prototype = obj;
+		return new F();
+	}
+	function Super(){
+		// 只在此处声明基本属性和引用属性
+		this.val = 1;
+		this.arr = [1];
+	}
+
+	function getSubObject(obj){
+        // 创建新对象
+        var clone = beget(obj); // 核心
+        // 增强
+        clone.attr1 = 1;
+        clone.atte2 = 2;
+        // clone.attr3...
+
+        return clone;
+	}
+
+	var sub = getSubObject(new Super());
+	alert(sub.val); // 1
+    alert(sub.arr); // 1
+    alert(sub.attr1); // 1
+
+</script>
+
+</body>
+</html>
+<!--
+    核心：给原型继承穿了个马甲，看吃起来更像继承（原型式继承更像是对象复制）
+         注意：beget函数并不是必须的，创建新对象 -> 增强 -> 返回该对象，这样的过程叫寄生式继承，
+         新对象是如何创建的并不重要
+
+    优缺点：
+        优点：
+            1.还是不需要创建自定义类型
+        缺点：
+            1.无法实现函数复用（没用到原型，不能复用）
+            P.S.有缺陷的寄生式继承 + 不完美的组合继承 = 完美的寄生组合式继承
+-->

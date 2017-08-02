@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寄生组合继承（最佳方式）</title>
+</head>
+<body>
+
+<script>
+	function beget(obj){ // 生孩子函数 beget: 龙beget龙,风beget凤
+		var F = function(){};
+		F.prototype = obj;
+		return new F();
+	}
+	function Super(){
+		// 只在此处声明基本属性和引用属性
+		this.val = 1;
+		this.arr = [1];
+	}
+
+	// 拿到父类对象
+	var sup = new Super();
+    // 生孩子
+    var sub = beget(sup); // 核心
+    // 增强
+    sub.attr1 = 1;
+    sub.attr2 = 2;
+    // sub.attr3...
+
+    alert(sub.val); // 1
+    alert(sub.arr); // 1
+    alert(sub.attr1); // 1
+
+</script>
+
+</body>
+</html>
+<!--
+    核心：用beget得到一个“纯洁”（没有实例属性）的新对象，再逐步增强填充实例属性
+         P.S.ES5提供了Object.create()函数，内部就是原型式继承，IE9+支持
+
+    优缺点：
+        优点：
+            1.从已有对象衍生新对象，不需要创建自定义类型（更像是对象复制，而不是继承）
+        缺点：
+            1.原型引用属性会被所有实例共享，因为是用整个父类来充当了子类原型对象，
+            所以这个缺陷无法避免
+            2.无法实现代码复用（新对象是现取得，属性是现添的，都没用函数封装，无法复用）
+-->

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寄生组合继承（最佳方式）</title>
+</head>
+<body>
+
+<script>
+    function beget(obj){ // 生孩子函数 beget: 龙beget龙,风beget凤
+        var F = function(){};
+        F.prototype = obj;
+        return new F();
+    }
+    function Super(){
+    	// 只在此处声明基本属性和引用属性
+        this.val = 1;
+        this.arr = [1];
+    }
+
+    // 在此声明函数
+    Super.prototype.fun1 = function(){};
+    Super.prototype.fun2 = function(){};
+    // Super.prototype.fun3...
+    function Sub(){
+        Super.call(this); // 核心
+        // ...
+    }
+
+    var proto = beget(Super.prototype); // 核心
+    proto.constructor = Sub;            // 核心
+    Sub.prototype = proto;              // 核心
+
+    var sub = new Sub();
+    alert(sub.val);
+    alert(sub.arr);
+
+</script>
+
+</body>
+</html>
+<!--
+    核心：用beget(Super.prototype);切掉了原型对象上多于的那份父类实例属性
+
+    优缺点：
+        优点：
+            完美
+        缺点：
+            理论上没有（用起来麻烦算缺点）
+-->
